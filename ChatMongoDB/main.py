@@ -13,3 +13,4 @@ if __name__ == '__main__':
     print(auth)
 
 
+    # testando se o github está funcionando
