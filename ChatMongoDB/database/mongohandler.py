@@ -33,6 +33,21 @@ class MongoHandler:
     def connect(self, database_name):
         return self.client[database_name]
 
+    def login(self, email, senha) -> bool:
+        db = self.connect("chat")
+        user = db.users.find_one({"email": email, "password": senha})
+        if user:
+            return True
+        else:
+            return False
+
+    def users_list(self):
+        db = self.connect("chat")
+        users_collection = db["users"]
+        users = users_collection.find({}, {"_id": 0, "nickname": 1})
+
+        for user in users:
+            print(user.get("nickname"))
     # def authenticate(self, email, password) -> bool:
     #     # procuro pelo email e password
     #     #conecta nesse banco (database)
