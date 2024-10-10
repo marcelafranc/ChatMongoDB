@@ -14,7 +14,10 @@ from pymongo import MongoClient
 
 class MongoHandler:
     def __init__(self):
-        self.client = MongoClient("mongodb+srv://marcela:123456qwerty@samples.dpnaz.mongodb.net/?retryWrites=true&w=majority&appName=Samples")
+        self.connection_string = "mongodb+srv://marcela:123456qwerty@samples.dpnaz.mongodb.net/?retryWrites=true&w=majority&appName=Samples"
+        #self.client = MongoClient("mongodb+srv://marcela:123456qwerty@samples.dpnaz.mongodb.net/?retryWrites=true&w=majority&appName=Samples")
+        self.client = MongoClient(self.connection_string)
+
 
     def connect(self, database_name):
         return self.client[database_name]
@@ -30,8 +33,7 @@ class MongoHandler:
     # retorna o banco (db) para vc
     # conect tarara db tal e faz a operacao
     # precisa fazer disconnect
-    def connect(self, database_name):
-        return self.client[database_name]
+
 
     def login(self, email, senha) -> bool:
         db = self.connect("chat")
@@ -60,12 +62,15 @@ class MongoHandler:
 
 
     def add_new_message (self, m: Message):
-        cli = MongoClient(self.connection_string)
-        db = cli["chat"]
-        # meu banco (database) chama 'chat'
+        db = self.connect("chat")
         coll = db.messages
-        # minha colecao chama 'messages'
         return coll.insert_one(m.__dict__).inserted_id
+        #cli = MongoClient(self.connection_string)
+        #db = cli["chat"]
+        # meu banco (database) chama 'chat'
+        #coll = db.messages
+        # minha colecao chama 'messages'
+        #return coll.insert_one(m.__dict__).inserted_id
         # como transformo um objeto em dicionário? ele espera um objeto no formato dicionário
         # dica de prof fodao de python: converte qualquer coisa de Dictionary fazendo assim:
         # m.__dict__ --> pega uma classe e transforma os dados dela no formato de dicionario em python

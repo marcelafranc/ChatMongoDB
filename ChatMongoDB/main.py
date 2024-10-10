@@ -1,4 +1,4 @@
-from database.entities import User
+from database.entities import User, Message
 from database.mongohandler import MongoHandler
 if __name__ == '__main__':
     #u2 = User('bla')
@@ -36,6 +36,7 @@ if __name__ == '__main__':
                 print("Opção inválida! Tente novamente.")
 
     def login():
+        global nickname_logado #testando
         while True:
             print("\n----------------------------------------------------")
             print("                       LOGIN                        ")
@@ -47,6 +48,9 @@ if __name__ == '__main__':
             entrar = handler.login(email, senha)
             print(entrar)
             if entrar == True:
+                # testandoooo
+                user = handler.connect("chat").users.find_one({"email": email})
+                nickname_logado = user.get("nickname")  # Armazenar o nickname
                 opcoes()
                 break
             else:
@@ -89,15 +93,21 @@ if __name__ == '__main__':
             print("\n----------------------------------------------------")
             print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
             msg = input(" Digite sua mensagem: ")
+            # print("Usuario logado: ")
+            sendMessage(nickname_logado, usuario_escolhido, msg, handler)
+            # pegar nickname_from; nickname_to (usuario_escolhido); content (msg)
 
         else:
             print("Escolha inválida. Tente novamente.")
 
 
+    def sendMessage(nickname_from, nickname_to, content, handler):
+        message = Message(nickname_from, nickname_to, content)
+        message_id = handler.add_new_message(message)
 
-
+        print(f"Mensagem enviada de {nickname_from} para {nickname_to}: {content} (ID: {message_id})")
     def readMessages():
-        print("ENVIAR msg")
+        print("LER msg")
 
     # RODAR FUNCOES
     escolher_opcao()
