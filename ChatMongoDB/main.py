@@ -1,24 +1,21 @@
 from database.entities import User, Message
 from database.mongohandler import MongoHandler
 if __name__ == '__main__':
-    #u2 = User('bla')
-    #u2.nickname = 'ble'
-    #u1 = User('marcela', 'marcela@puc.edu.br','123qwe')
 
-    # handler = MongoHandler
     handler = MongoHandler()
     auth = handler.authenticate('mateus@gmail.com', '123456qwerty')
-
-    # teste
+    # TESTE - REMOVER *APENAS* NA ENTREGA FINAL
+    # VERIFICA RAPIDAMENTE SE A CONEXAO COM O BANCO ESTA FUNCIONANDO
     print(auth)
 
-    # comecando aqui
+    # Funcao Menu Inicial
     def mostrar_menu():
         print ("----------------------------------------------------")
         print ("            Bem-vindo(a) ao ChatMongoDB!            ")
         print("\n            1. Entrar")
         print("            2. Sair\n")
 
+    # Funcao Escolher Opcao do Menu Inicial
     def escolher_opcao():
         while True:
             mostrar_menu()
@@ -35,6 +32,7 @@ if __name__ == '__main__':
             else:
                 print("Opção inválida! Tente novamente.")
 
+    # Funcao Logar no Sistema
     def login():
         global nickname_logado #testando
         while True:
@@ -42,13 +40,9 @@ if __name__ == '__main__':
             print("                       LOGIN                        ")
             email = input("\n >> Digite seu email: ")
             senha = input("\n >> Digite sua senha: ")
-            #print (email)
-            #print(senha)
-            # auth = handler.authenticate('mateus@gmail.com', '123456qwerty')
             entrar = handler.login(email, senha)
             print(entrar)
             if entrar == True:
-                # testandoooo
                 user = handler.connect("chat").users.find_one({"email": email})
                 nickname_logado = user.get("nickname")  # Armazenar o nickname
                 opcoes()
@@ -56,7 +50,7 @@ if __name__ == '__main__':
             else:
                 print("Credenciais incorretas. Tente novamente.")
 
-
+    # Funcao Menu de Opcoes do Usuario (Logado)
     def opcoes():
         while True:
             print("\n----------------------------------------------------")
@@ -73,6 +67,7 @@ if __name__ == '__main__':
             else:
                 print("Opção inválida! Tente novamente.")
 
+    # Funcao para o usuario visualizar a lista de usuarios cadastrados no sistema
     def viewlist():
         print("\n----------------------------------------------------")
         print("     Escolha um usuário para enviar uma mensagem!     \n")
@@ -93,29 +88,22 @@ if __name__ == '__main__':
             print("\n----------------------------------------------------")
             print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
             msg = input(" Digite sua mensagem: ")
-            # print("Usuario logado: ")
             sendMessage(nickname_logado, usuario_escolhido, msg, handler)
-            # pegar nickname_from; nickname_to (usuario_escolhido); content (msg)
-
         else:
             print("Escolha inválida. Tente novamente.")
 
-
+    # Funcao para enviar a mensagem ao usuario escolhido
     def sendMessage(nickname_from, nickname_to, content, handler):
         message = Message(nickname_from, nickname_to, content)
         message_id = handler.add_new_message(message)
 
         print(f"Mensagem enviada de {nickname_from} para {nickname_to}: {content} (ID: {message_id})")
 
-
+    # Funcao para visualizar as mensagens que o usuario logado recebeu
     def inbox():
         print("LER msg")
         print("\n----------------------------------------------------")
         print(f"        Caixa de entrada de {nickname_logado}    \n")
-        #chama
-        # sendMessage(nickname_logado, usuario_escolhido, msg, handler)
-        #mensagens = handler.my_chats(nickname_logado)
-        #print(mensagens)
         my_inbox = handler.my_chats(nickname_logado)
         for index, message in enumerate(my_inbox, start=1):
             print(f"{index}. {message}")
@@ -126,14 +114,12 @@ if __name__ == '__main__':
             usuario_escolhido = my_inbox[escolha]
             print("\n----------------------------------------------------")
             print(f"             CHAT COM {usuario_escolhido}")
-            print("**** chamar funcao pra ler ****")
+            print("**** chamar funcao pra ler a mensagem escolhida ****")
+            #TO DO: Criar uma funcao readMessage(usuario_escolhido?)
 
         else:
             print("Escolha inválida. Tente novamente.")
 
 
-
-    # RODAR FUNCOES
+    # RODA O PROGRAMA INTEIRO!
     escolher_opcao()
-
-    # testando se o github está funcionando
