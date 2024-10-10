@@ -25,16 +25,12 @@ if __name__ == '__main__':
             escolha = input("       >>> Escolha uma opção: ")
 
             if escolha == "1":
-                #print("Você escolheu 'Entrar'.")
                 login()
-                # Aqui você pode adicionar o código que executa a ação de entrar.
                 break
             elif escolha == "2":
                 print("----------------------------------------------------")
                 print("\nVocê escolheu 'Sair'.")
                 print("Até a próxima!")
-
-                # Aqui você pode adicionar o código que executa a ação de sair.
                 break
             else:
                 print("Opção inválida! Tente novamente.")
@@ -60,7 +56,7 @@ if __name__ == '__main__':
     def opcoes():
         while True:
             print("\n----------------------------------------------------")
-            print("\n               O que você deseja fazer?               ")
+            print("               O que você deseja fazer?               \n")
             print("               1. Enviar mensagem")
             print("               2. Ler mensagem\n")
             escolha = input("       >>> Escolha uma opção: ")
@@ -77,23 +73,25 @@ if __name__ == '__main__':
         print("\n----------------------------------------------------")
         print("     Escolha um usuário para enviar uma mensagem!     \n")
 
-        userscoll = handler.users_list()
+        usersColl = handler.users_list()
 
-        if not userscoll:
+        if not usersColl:
             print("Nenhum usuário encontrado.")
             return
 
-        for index, user in enumerate(userscoll, start=1):
+        for index, user in enumerate(usersColl, start=1):
             print(f"{index}. {user}")
 
-        # escolha = int(input("\nDigite o número do usuário escolhido: ")) - 1
-        #
-        # if 0 <= escolha < len(userscoll):
-        #     usuario_escolhido = userscoll[escolha]
-        #     print(f"\nVocê escolheu o usuário: {usuario_escolhido}")
-        #     print("cheguei aquiii ")
-        # else:
-        #     print("Escolha inválida. Tente novamente.")
+        escolha = int(input("\nDigite o número do usuário escolhido: ")) - 1
+
+        if 0 <= escolha < len(usersColl):
+            usuario_escolhido = usersColl[escolha]
+            print("\n----------------------------------------------------")
+            print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
+            msg = input(" Digite sua mensagem: ")
+
+        else:
+            print("Escolha inválida. Tente novamente.")
 
 
 

@@ -45,8 +45,17 @@ class MongoHandler:
         db = self.connect("chat")
         users_collection = db["users"]
         users = users_collection.find({}, {"_id": 0, "nickname": 1})
+        # for user in users:
+        #     print(user.get("nickname"))
+
+        lista_nicknames = []
+
         for user in users:
-            print(user.get("nickname"))
+            nickname = user.get("nickname")
+            if nickname:  # Verifica se o nickname não é None
+                lista_nicknames.append(nickname)  # Adiciona o nickname à lista
+
+        return lista_nicknames
 
 
 
