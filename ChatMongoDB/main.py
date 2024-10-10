@@ -9,6 +9,7 @@ if __name__ == '__main__':
     print(auth)
 
     # oiiii Marchelaaaaa
+    # oiiii nii tudo bemmg
 
     # Funcao Menu Inicial
     def mostrar_menu():
