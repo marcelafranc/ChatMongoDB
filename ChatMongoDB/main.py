@@ -74,9 +74,28 @@ if __name__ == '__main__':
                 print("Opção inválida! Tente novamente.")
 
     def viewlist():
-        print("ver lista de usuarios no banco (escolher um)")
-        usuariosNoBanco = handler.users_list()
-        print(usuariosNoBanco)
+        print("\n----------------------------------------------------")
+        print("     Escolha um usuário para enviar uma mensagem!     \n")
+
+        userscoll = handler.users_list()
+
+        if not userscoll:
+            print("Nenhum usuário encontrado.")
+            return
+
+        for index, user in enumerate(userscoll, start=1):
+            print(f"{index}. {user}")
+
+        # escolha = int(input("\nDigite o número do usuário escolhido: ")) - 1
+        #
+        # if 0 <= escolha < len(userscoll):
+        #     usuario_escolhido = userscoll[escolha]
+        #     print(f"\nVocê escolheu o usuário: {usuario_escolhido}")
+        #     print("cheguei aquiii ")
+        # else:
+        #     print("Escolha inválida. Tente novamente.")
+
+
 
 
     def readMessages():

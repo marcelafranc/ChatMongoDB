@@ -45,20 +45,8 @@ class MongoHandler:
         db = self.connect("chat")
         users_collection = db["users"]
         users = users_collection.find({}, {"_id": 0, "nickname": 1})
-
         for user in users:
             print(user.get("nickname"))
-    # def authenticate(self, email, password) -> bool:
-    #     # procuro pelo email e password
-    #     #conecta nesse banco (database)
-    #     db = self.connect("chat")
-    #     user = db.users.find_one({"email": email, "password": password})
-    #     if user:
-    #         return True
-    #     else:
-    #         return False
-
-
 
 
 
