@@ -65,13 +65,17 @@ class MongoHandler:
         db = self.connect("chat")
         coll = db.messages
         return coll.insert_one(m.__dict__).inserted_id
-        #cli = MongoClient(self.connection_string)
-        #db = cli["chat"]
-        # meu banco (database) chama 'chat'
+
+
+    def my_chats(self, nickname_logado):
+        # pegar: usuario logado para ver nickname_to -- verificar se há mensagens para mim
+        # pegar nickname_from para ver QUAIS (QUEM) usuarios me mandaram mensagem
+        db = self.connect("chat")
         #coll = db.messages
-        # minha colecao chama 'messages'
-        #return coll.insert_one(m.__dict__).inserted_id
-        # como transformo um objeto em dicionário? ele espera um objeto no formato dicionário
-        # dica de prof fodao de python: converte qualquer coisa de Dictionary fazendo assim:
-        # m.__dict__ --> pega uma classe e transforma os dados dela no formato de dicionario em python
-        # nao precisa nem converter para json.
+        #db.messages.find({"nickname_to": "nih"})
+        # msg = db.messages.find({"nickname_to": nickname_logado})
+        # ret = msg.nickname_from
+        # return ret
+        msg = db.messages.find({"nickname_to": nickname_logado}, {"nickname_from": 1, "_id": 0})
+        ret = [m['nickname_from'] for m in msg]
+        return ret

@@ -68,7 +68,7 @@ if __name__ == '__main__':
                 viewlist()
                 break
             elif escolha == "2":
-                readMessages()
+                inbox()
                 break
             else:
                 print("Opção inválida! Tente novamente.")
@@ -106,8 +106,32 @@ if __name__ == '__main__':
         message_id = handler.add_new_message(message)
 
         print(f"Mensagem enviada de {nickname_from} para {nickname_to}: {content} (ID: {message_id})")
-    def readMessages():
+
+
+    def inbox():
         print("LER msg")
+        print("\n----------------------------------------------------")
+        print(f"        Caixa de entrada de {nickname_logado}    \n")
+        #chama
+        # sendMessage(nickname_logado, usuario_escolhido, msg, handler)
+        #mensagens = handler.my_chats(nickname_logado)
+        #print(mensagens)
+        my_inbox = handler.my_chats(nickname_logado)
+        for index, message in enumerate(my_inbox, start=1):
+            print(f"{index}. {message}")
+
+        escolha = int(input("\nDigite o número do usuário para ler a mensagem: ")) - 1
+
+        if 0 <= escolha < len(my_inbox):
+            usuario_escolhido = my_inbox[escolha]
+            print("\n----------------------------------------------------")
+            print(f"             CHAT COM {usuario_escolhido}")
+            print("**** chamar funcao pra ler ****")
+
+        else:
+            print("Escolha inválida. Tente novamente.")
+
+
 
     # RODAR FUNCOES
     escolher_opcao()
