@@ -8,6 +8,8 @@ if __name__ == '__main__':
     # VERIFICA RAPIDAMENTE SE A CONEXAO COM O BANCO ESTA FUNCIONANDO
     print(auth)
 
+    # oiiii Marchelaaaaa
+
     # Funcao Menu Inicial
     def mostrar_menu():
         print ("----------------------------------------------------")
