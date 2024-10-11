@@ -52,13 +52,13 @@ if __name__ == '__main__':
 
         # Verifica se o usuário já existe no banco
         if handler.validarApelido(nickname):
-            print("Usuário já cadastrado com esse Apelido.")
+            print("\nUsuário já cadastrado com esse Apelido.")
         elif handler.validarEmail(email):
-            print("Usuário já cadastrado com esse email.")
+            print("\nUsuário já cadastrado com esse email.")
         else:
             # Insere o usuário no banco de dados
             handler.adicionar_usuario(novo_usuario)
-            print(f"Usuário {nickname} cadastrado com sucesso!")
+            print(f"\nUsuário {nickname} cadastrado com sucesso!")
             mostrar_menu()
             escolher_opcao()  # Retorna ao menu principal após cadastro
     
@@ -109,48 +109,49 @@ if __name__ == '__main__':
 
         usersColl = handler.users_list()
 
+        # Remove o usuário logado da lista de usuários
         usersColl = [user for user in usersColl if user != nickname_logado]
 
         if not usersColl:
             print("Nenhum usuário encontrado.")
             return
 
+        # Exibe a lista de usuários
         for index, user in enumerate(usersColl, start=1):
             print(f"{index}. {user}")
 
-        escolha = int(input("\nDigite o número do usuário escolhido: ")) - 1
+        while True:
+            escolha = input("\nDigite o número do usuário escolhido: ")
+            if escolha.isdigit():
+                escolha = int(escolha) - 1
 
-        if 0 <= escolha < len(usersColl):
-            usuario_escolhido = usersColl[escolha]
+                if 0 <= escolha < len(usersColl):
+                    usuario_escolhido = usersColl[escolha]
+                    print("\n----------------------------------------------------")
+                    print(f"  Você escolheu enviar uma mensagem para: {usuario_escolhido}")
 
-            # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-            print("\n----------------------------------------------------")
-            print(f"  Você escolheu enviar uma mensagem para: {usuario_escolhido}")
-            #key = input("\n Digite a chave secreta: ")
-            #typeKey(key)
-            key = input("Digite a chave (16 caracteres): ")
-            while len(key) != 16:
-                print("A chave precisa ter exatamente 16 caracteres.")
-                key = input("Digite a chave (16 caracteres): ")
+                    key = input("Digite a chave (16 caracteres): ")
+                    while len(key) != 16:
+                        print("A chave precisa ter exatamente 16 caracteres.")
+                        key = input("Digite a chave (16 caracteres): ")
 
-            print("\n----------------------------------------------------")
-            print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
-            msg = input(" Digite sua mensagem: ")
-
-            #MANDAR PARA CRIPTOGRAFIA:
-            encrypted = encrypt(key, msg)
-            sendmessage(nickname_logado, usuario_escolhido, encrypted, handler)
-            ###########sendmessage(nickname_logado, usuario_escolhido, msg, handler)
-
-        else:
-            print("Escolha inválida. Tente novamente.")
+                    print("\n----------------------------------------------------")
+                    print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
+                    msg = input("Digite sua mensagem: ")
+                    encrypted = encrypt(key, msg)
+                    sendmessage(nickname_logado, usuario_escolhido, encrypted, handler)
+                    break
+                else:
+                    print("Escolha inválida. O número não corresponde a nenhum usuário. Tente novamente.")
+            else:
+                print("Entrada inválida. Digite um número correspondente a um usuário.")
 
     # Funcao para enviar a mensagem ao usuario escolhido
     def sendmessage(nickname_from, nickname_to, content, handler):
         message = Message(nickname_from, nickname_to, content)
         message_id = handler.add_new_message(message)
 
-        print(f"\nMensagem enviada de {nickname_from} para {nickname_to}!")
+        print(f"\nMensagem enviada para {nickname_to}!")
         opcoes()
 
     # Funcao para visualizar as mensagens que o usuario logado recebeu
