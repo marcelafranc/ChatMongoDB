@@ -1,6 +1,8 @@
 from database.entities import User, Message
 from database.mongohandler import MongoHandler
 #from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
+from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
+
 
 if __name__ == '__main__':
 
@@ -21,7 +23,6 @@ if __name__ == '__main__':
     # Funcao Escolher Opcao do Menu Inicial
     def escolher_opcao():
         while True:
-            mostrar_menu()
             escolha = input("       >>> Escolha uma opção: ")
 
             if escolha == "1":
@@ -34,7 +35,7 @@ if __name__ == '__main__':
                 print("----------------------------------------------------")
                 print("\nVocê escolheu 'Sair'.")
                 print("Até a próxima!")
-                break
+                exit()
             else:
                 print("Opção inválida! Tente novamente.")
 
@@ -58,6 +59,7 @@ if __name__ == '__main__':
             # Insere o usuário no banco de dados
             handler.adicionar_usuario(novo_usuario)
             print(f"Usuário {nickname} cadastrado com sucesso!")
+            mostrar_menu()
             escolher_opcao()  # Retorna ao menu principal após cadastro
     
     # Funcao Logar no Sistema
@@ -95,7 +97,8 @@ if __name__ == '__main__':
                 break
             elif escolha == "3":
                 mostrar_menu()
-                break
+                escolher_opcao()
+
             else:
                 print("Opção inválida! Tente novamente.")
 
@@ -123,15 +126,22 @@ if __name__ == '__main__':
             # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
             print("\n----------------------------------------------------")
             print(f"  Você escolheu enviar uma mensagem para: {usuario_escolhido}")
-            key = input("\n Digite a chave secreta: ")
-            typeKey(key)
+            #key = input("\n Digite a chave secreta: ")
+            #typeKey(key)
+            key = input("Digite a chave (16 caracteres): ")
+            while len(key) != 16:
+                print("A chave precisa ter exatamente 16 caracteres.")
+                key = input("Digite a chave (16 caracteres): ")
 
             print("\n----------------------------------------------------")
             print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
             msg = input(" Digite sua mensagem: ")
-            sendmessage(nickname_logado, usuario_escolhido, msg, handler)
 
-            # CRIPTOGRAFA A MENSAGEM
+            #MANDAR PARA CRIPTOGRAFIA:
+            encrypted = encrypt(key, msg)
+            sendmessage(nickname_logado, usuario_escolhido, encrypted, handler)
+            ###########sendmessage(nickname_logado, usuario_escolhido, msg, handler)
+
         else:
             print("Escolha inválida. Tente novamente.")
 
@@ -145,7 +155,6 @@ if __name__ == '__main__':
 
     # Funcao para visualizar as mensagens que o usuario logado recebeu
     def inbox():
-        print("LER msg")
         print("\n----------------------------------------------------")
         print(f"        Caixa de entrada de {nickname_logado}    \n")
         my_inbox = handler.my_chats(nickname_logado)
@@ -157,25 +166,58 @@ if __name__ == '__main__':
         if 0 <= escolha < len(my_inbox):
             usuario_escolhido = my_inbox[escolha]
             print("\n----------------------------------------------------")
+            key = input("Digite a chave (16 caracteres): ")
+            while len(key) != 16:
+                print("A chave precisa ter exatamente 16 caracteres.")
+                key = input("Digite a chave (16 caracteres): ")
+                # MANDAR PARA CRIPTOGRAFIA:
+                #encrypted = encrypt(key, msg)
+                #sendmessage(nickname_logado, usuario_escolhido, encrypted, handler)
+
+            #pego o conteudo criptografado
+            content = getmessage(usuario_escolhido, nickname_logado)
+            #descriptografo e
+
+            decryptedmessage = decrypting(key, content)
+            #exibo na tela
+            print("\n----------------------------------------------------")
             print(f"                CHAT COM {usuario_escolhido}")
-            readmessage(usuario_escolhido, nickname_logado)
-            #print("**** chamar funcao pra ler a mensagem escolhida ****")
-            #TO DO: Criar uma funcao readMessage(usuario_escolhido?)
+            print(f"\n {decryptedmessage}")
+
 
         else:
             print("Escolha inválida. Tente novamente.")
 
-    # DIGITAR A CHAVE: PARA ENVIAR
-    def typeKey(key):
-        # chama criptografia
-        #digita e envia a mensagem
-        print("AAAAAAAAAAA")
-
-    def readmessage(usuario_escolhido, nickname_logado):
+    # MUDAR
+    def getmessage(usuario_escolhido, nickname_logado):
         content = handler.read_a_message(usuario_escolhido, nickname_logado)
-        if content:
-            print(f"\n  {content}")
-            print("----------------------------------------------------\n")
+        return content
+        # if content:
+        #     print(f"\n  {content}")
+        #     print("----------------------------------------------------\n")
 
+
+    # PARTE DA CRIPTOGRAFIA!!!!!!!!!!!!!!!!!!
+    def encrypt(key, message):
+        iv_parameter = "0011223344556677"  # 16 bytes de IV
+        output_format = "b64"
+        cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
+        encryptedcontent = cipher.encrypt(message)
+        print(f"Mensagem criptografada (b64): {encryptedcontent}")
+        return encryptedcontent
+
+    def decrypting(key, message):
+        iv_parameter = "0011223344556677"  # 16 bytes de IV
+        output_format = "b64"
+        cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
+        encrypted = cipher.encrypt(message)
+        #print(f"Mensagem criptografada (b64): {encrypted}")
+        descriptografia = (cipher.decrypt(message))
+        return descriptografia
+
+
+
+    ## MAIN
     # RODA O PROGRAMA INTEIRO!
+    mostrar_menu()
     escolher_opcao()
