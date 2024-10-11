@@ -62,3 +62,14 @@ class MongoHandler:
         msg = db.messages.find({"nickname_to": nickname_logado}, {"nickname_from": 1, "_id": 0})
         ret = [m['nickname_from'] for m in msg]
         return ret
+
+    def read_a_message(self, usuario_escolhido, nickname_logado):
+        db = self.connect("chat")
+        message = db.messages.find_one({"nickname_to": nickname_logado, "nickname_from": usuario_escolhido})
+        # retorne o content do objeto encontrado
+        if message:
+            return message['content']  # Retorna o conteúdo da mensagem
+        else:
+            return None
+
+

@@ -56,7 +56,8 @@ if __name__ == '__main__':
             print("\n----------------------------------------------------")
             print("               O que você deseja fazer?               \n")
             print("               1. Enviar mensagem")
-            print("               2. Ler mensagem\n")
+            print("               2. Ler mensagem")
+            print("               3. Sair\n")
             escolha = input("       >>> Escolha uma opção: ")
             if escolha == "1":
                 viewlist()
@@ -64,6 +65,8 @@ if __name__ == '__main__':
             elif escolha == "2":
                 inbox()
                 break
+            elif escolha == "3":
+                mostrar_menu()
             else:
                 print("Opção inválida! Tente novamente.")
 
@@ -85,19 +88,29 @@ if __name__ == '__main__':
 
         if 0 <= escolha < len(usersColl):
             usuario_escolhido = usersColl[escolha]
+
+            # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+            print("\n----------------------------------------------------")
+            print(f"  Você escolheu enviar uma mensagem para: {usuario_escolhido}")
+            key = input("\n Digite a chave secreta: ")
+            typeKey(key)
+
             print("\n----------------------------------------------------")
             print(f"Enviando uma mensagem para: {usuario_escolhido} \n")
             msg = input(" Digite sua mensagem: ")
-            sendMessage(nickname_logado, usuario_escolhido, msg, handler)
+            sendmessage(nickname_logado, usuario_escolhido, msg, handler)
+
+            # CRIPTOGRAFA A MENSAGEM
         else:
             print("Escolha inválida. Tente novamente.")
 
     # Funcao para enviar a mensagem ao usuario escolhido
-    def sendMessage(nickname_from, nickname_to, content, handler):
+    def sendmessage(nickname_from, nickname_to, content, handler):
         message = Message(nickname_from, nickname_to, content)
         message_id = handler.add_new_message(message)
 
-        print(f"Mensagem enviada de {nickname_from} para {nickname_to}: {content} (ID: {message_id})")
+        print(f"\nMensagem enviada de {nickname_from} para {nickname_to}!")
+        opcoes()
 
     # Funcao para visualizar as mensagens que o usuario logado recebeu
     def inbox():
@@ -113,13 +126,25 @@ if __name__ == '__main__':
         if 0 <= escolha < len(my_inbox):
             usuario_escolhido = my_inbox[escolha]
             print("\n----------------------------------------------------")
-            print(f"             CHAT COM {usuario_escolhido}")
-            print("**** chamar funcao pra ler a mensagem escolhida ****")
+            print(f"                CHAT COM {usuario_escolhido}")
+            readmessage(usuario_escolhido, nickname_logado)
+            #print("**** chamar funcao pra ler a mensagem escolhida ****")
             #TO DO: Criar uma funcao readMessage(usuario_escolhido?)
 
         else:
             print("Escolha inválida. Tente novamente.")
 
+    # DIGITAR A CHAVE: PARA ENVIAR
+    def typeKey(key):
+        # chama criptografia
+        #digita e envia a mensagem
+        print("AAAAAAAAAAA")
+
+    def readmessage(usuario_escolhido, nickname_logado):
+        content = handler.read_a_message(usuario_escolhido, nickname_logado)
+        if content:
+            print(f"\n  {content}")
+            print("----------------------------------------------------\n")
 
     # RODA O PROGRAMA INTEIRO!
     escolher_opcao()
