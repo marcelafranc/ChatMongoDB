@@ -1,5 +1,6 @@
 from database.entities import User, Message
 from database.mongohandler import MongoHandler
+#from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
 
 if __name__ == '__main__':
 
@@ -51,7 +52,7 @@ if __name__ == '__main__':
         # Verifica se o usuário já existe no banco
         if handler.validarApelido(nickname):
             print("Usuário já cadastrado com esse Apelido.")
-        if handler.validarEmail(email):
+        elif handler.validarEmail(email):
             print("Usuário já cadastrado com esse email.")
         else:
             # Insere o usuário no banco de dados
