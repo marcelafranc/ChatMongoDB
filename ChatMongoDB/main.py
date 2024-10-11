@@ -1,5 +1,6 @@
 from database.entities import User, Message
 from database.mongohandler import MongoHandler
+
 if __name__ == '__main__':
 
     handler = MongoHandler()
@@ -48,7 +49,9 @@ if __name__ == '__main__':
         novo_usuario = User(nickname, email, password)
 
         # Verifica se o usuário já existe no banco
-        if handler.usuario_existe(email):
+        if handler.validarApelido(nickname):
+            print("Usuário já cadastrado com esse Apelido.")
+        if handler.validarEmail(email):
             print("Usuário já cadastrado com esse email.")
         else:
             # Insere o usuário no banco de dados
@@ -101,6 +104,8 @@ if __name__ == '__main__':
         print("     Escolha um usuário para enviar uma mensagem!     \n")
 
         usersColl = handler.users_list()
+
+        usersColl = [user for user in usersColl if user != nickname_logado]
 
         if not usersColl:
             print("Nenhum usuário encontrado.")

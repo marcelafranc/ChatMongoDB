@@ -32,10 +32,16 @@ class MongoHandler:
         coll = db.users
         return coll.insert_one(u.__dict__).inserted_id
     
-    def usuario_existe(self, email: str) -> bool:
+    def validarEmail(self, email: str) -> bool:
         db = self.connect("chat")
         coll = db.users
         usuario = coll.find_one({"email": email})
+        return usuario is not None
+    
+    def validarApelido(self, nickname: str) -> bool:
+        db = self.connect("chat")
+        coll = db.users
+        usuario = coll.find_one({"nickname": nickname})
         return usuario is not None
 
     # Funcao de Login de Usuario
