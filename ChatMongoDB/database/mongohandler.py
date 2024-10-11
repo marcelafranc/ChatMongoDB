@@ -1,4 +1,5 @@
 from database.entities import Message
+from database.entities import User
 from pymongo import MongoClient
 
 class MongoHandler:
@@ -24,6 +25,18 @@ class MongoHandler:
     # retorna o banco (db) para vc
     # conect tarara db tal e faz a operacao
     # precisa fazer disconnect
+
+    # Funcao cadastrar Usuario
+    def adicionar_usuario(self, u: User):
+        db = self.connect("chat")
+        coll = db.users
+        return coll.insert_one(u.__dict__).inserted_id
+    
+    def usuario_existe(self, email: str) -> bool:
+        db = self.connect("chat")
+        coll = db.users
+        usuario = coll.find_one({"email": email})
+        return usuario is not None
 
     # Funcao de Login de Usuario
     def login(self, email, senha) -> bool:

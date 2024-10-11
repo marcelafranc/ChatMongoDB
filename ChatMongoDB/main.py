@@ -13,7 +13,8 @@ if __name__ == '__main__':
         print ("----------------------------------------------------")
         print ("            Bem-vindo(a) ao ChatMongoDB!            ")
         print("\n            1. Entrar")
-        print("            2. Sair\n")
+        print("            2. Cadastrar")
+        print("            3. Sair\n")
 
     # Funcao Escolher Opcao do Menu Inicial
     def escolher_opcao():
@@ -25,6 +26,9 @@ if __name__ == '__main__':
                 login()
                 break
             elif escolha == "2":
+                cadastrarUsuario()
+                break
+            elif escolha == "3":
                 print("----------------------------------------------------")
                 print("\nVocê escolheu 'Sair'.")
                 print("Até a próxima!")
@@ -32,6 +36,26 @@ if __name__ == '__main__':
             else:
                 print("Opção inválida! Tente novamente.")
 
+    # Funcao Cadastrar Usuario
+    def cadastrarUsuario(): 
+        print("\n----------------------------------------------------")
+        print("                       CADASTRO                      ")
+        nickname = input("Apelido: ")
+        email = input("Email: ")
+        password = input("Senha: ")
+
+        # Criando o objeto User
+        novo_usuario = User(nickname, email, password)
+
+        # Verifica se o usuário já existe no banco
+        if handler.usuario_existe(email):
+            print("Usuário já cadastrado com esse email.")
+        else:
+            # Insere o usuário no banco de dados
+            handler.adicionar_usuario(novo_usuario)
+            print(f"Usuário {nickname} cadastrado com sucesso!")
+            escolher_opcao()  # Retorna ao menu principal após cadastro
+    
     # Funcao Logar no Sistema
     def login():
         global nickname_logado #testando
@@ -67,6 +91,7 @@ if __name__ == '__main__':
                 break
             elif escolha == "3":
                 mostrar_menu()
+                break
             else:
                 print("Opção inválida! Tente novamente.")
 
