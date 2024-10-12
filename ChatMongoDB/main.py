@@ -180,7 +180,22 @@ if __name__ == '__main__':
             print(f"              MENSAGEM ESCOLHIDA")
             print(f"\n {decryptedmessage}")
             print("\n")
-            opcoes()
+
+            while True:
+                print("Escolha a próxima ação:")
+                print("1. Voltar para Opções")
+                print("2. Voltar para Caixa de Mensagens")
+
+                escolha = input("Digite o número da opção desejada: ")
+
+                if escolha == "1":
+                    opcoes()
+                    break
+                elif escolha == "2":
+                    inbox()
+                    break
+                else:
+                    print("Escolha inválida. Tente novamente.")
 
 
     # DEU CERTO
@@ -215,7 +230,7 @@ if __name__ == '__main__':
 
     # PARTE DA CRIPTOGRAFIA!!!!!!!!!!!!!!!!!!
     def encrypt(key, message):
-        iv_parameter = "0011223344556677"  # 16 bytes de IV
+        iv_parameter = "0011223344556677"
         output_format = "b64"
         cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
         encryptedcontent = cipher.encrypt(message)
@@ -223,7 +238,7 @@ if __name__ == '__main__':
         return encryptedcontent
 
     def decrypting(key, message):
-        iv_parameter = "0011223344556677"  # 16 bytes de IV
+        iv_parameter = "0011223344556677"
         output_format = "b64"
         cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
         encrypted = cipher.encrypt(message)
