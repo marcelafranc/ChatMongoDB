@@ -78,17 +78,44 @@ class MongoHandler:
     # Funcao para visualizar quais usuarios mandaram mensagem para o usuario logado
     def my_chats(self, nickname_logado):
         db = self.connect("chat")
-        msg = db.messages.find({"nickname_to": nickname_logado}, {"nickname_from": 1, "_id": 0})
-        ret = [m['nickname_from'] for m in msg]
-        return ret
+        usuarios_distintos = db.messages.distinct("nickname_from", {"nickname_to": nickname_logado})
+        #msg = db.messages.find({"nickname_to": nickname_logado}, {"nickname_from": 1, "_id": 0})
+        #ret = [m['nickname_from'] for m in usuarios_distintos]
+        return usuarios_distintos
+
+    # def get_users_who_sent_messages(self, logged_in_user_email):
+    #     db = self.connect("chat")
+    #     # Find distinct senders who sent messages to the logged-in user
+    #     distinct_senders = db.messages.distinct("remetente", {"destinatario": logged_in_user_email})
+    #
+    #     sender_messages = []
+    #     for sender in distinct_senders:
+    #         encrypted_messages = db.messages.find({"destinatario": logged_in_user_email, "remetente": sender})
+    #         for i, message in enumerate(encrypted_messages, start=1):
+    #             sender_messages.append({
+    #                 "indice": i,
+    #                 "remetente": sender,
+    #                 "mensagem": message['mensagem']  # Do not apply criptografia
+    #             })
+    #     return sender_messages
 
     def read_a_message(self, usuario_escolhido, nickname_logado):
         db = self.connect("chat")
-        message = db.messages.find_one({"nickname_to": nickname_logado, "nickname_from": usuario_escolhido})
-        # retorne o content do objeto encontrado
-        if message:
-            return message['content']  # Retorna o conteúdo da mensagem
-        else:
-            return None
+        mensagens_do_usuario = []
+        messages = db.messages.find({"nickname_to": nickname_logado, "nickname_from": usuario_escolhido})
+        for message in messages:
+            mensagens_do_usuario.append(message)
+        return mensagens_do_usuario
+
+
+    def getmanymsgs(self, usuario_escolhido, nickname_logado):
+        db = self.connect("chat")
+        messages = db.messages.find({"nickname_to": nickname_logado, "nickname_from": usuario_escolhido})
+        all_messages = {usuario_escolhido: []}
+        for message in messages:
+            all_messages[usuario_escolhido].append(message['content'])
+
+        return all_messages
+
 
 

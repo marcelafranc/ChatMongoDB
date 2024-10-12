@@ -171,31 +171,46 @@ if __name__ == '__main__':
             while len(key) != 16:
                 print("A chave precisa ter exatamente 16 caracteres.")
                 key = input("Digite a chave (16 caracteres): ")
-                # MANDAR PARA CRIPTOGRAFIA:
-                #encrypted = encrypt(key, msg)
-                #sendmessage(nickname_logado, usuario_escolhido, encrypted, handler)
 
-            #pego o conteudo criptografado
             content = getmessage(usuario_escolhido, nickname_logado)
-            #descriptografo e
 
-            decryptedmessage = decrypting(key, content)
-            #exibo na tela
+            retorno = escolher_mensagem_para_visualizar(usuario_escolhido, nickname_logado)
+            decryptedmessage = decrypting(key, retorno)
             print("\n----------------------------------------------------")
-            print(f"                CHAT COM {usuario_escolhido}")
+            print(f"              MENSAGEM ESCOLHIDA")
             print(f"\n {decryptedmessage}")
+            print("\n")
+            opcoes()
 
 
-        else:
-            print("Escolha inválida. Tente novamente.")
-
-    # MUDAR
+    # DEU CERTO
     def getmessage(usuario_escolhido, nickname_logado):
-        content = handler.read_a_message(usuario_escolhido, nickname_logado)
-        return content
-        # if content:
-        #     print(f"\n  {content}")
-        #     print("----------------------------------------------------\n")
+        contents = handler.read_a_message(usuario_escolhido, nickname_logado)
+        messages = [message['content'] for message in contents]
+        return messages
+
+
+    def escolher_mensagem_para_visualizar(usuario_escolhido, nickname_logado):
+        messages = getmessage(usuario_escolhido, nickname_logado)
+        if not messages:
+            print("Não há mensagens para exibir.")
+            return
+        print("Mensagens disponíveis:")
+        for i, message in enumerate(messages, start=1):
+            print(f"Mensagem {i}")
+
+        while True:
+            try:
+                escolha = int(input(f"Escolha o número da mensagem que deseja visualizar (1-{len(messages)}): "))
+                if 1 <= escolha <= len(messages):
+                    break
+                else:
+                    print(f"Escolha inválida. Digite um número entre 1 e {len(messages)}.")
+            except ValueError:
+                print("Entrada inválida. Por favor, insira um número.")
+
+        # RETORNO DA FUNCAO
+        return messages[escolha - 1]  # -1 para ajustar ao índice da lista
 
 
     # PARTE DA CRIPTOGRAFIA!!!!!!!!!!!!!!!!!!
@@ -212,7 +227,6 @@ if __name__ == '__main__':
         output_format = "b64"
         cipher = AESCBCPKCS5Padding(key, output_format, iv_parameter)
         encrypted = cipher.encrypt(message)
-        #print(f"Mensagem criptografada (b64): {encrypted}")
         descriptografia = (cipher.decrypt(message))
         return descriptografia
 
