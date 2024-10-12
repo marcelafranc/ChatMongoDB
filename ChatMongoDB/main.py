@@ -1,16 +1,11 @@
 from database.entities import User, Message
 from database.mongohandler import MongoHandler
-#from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
 from aes_pkcs5.algorithms.aes_cbc_pkcs5_padding import AESCBCPKCS5Padding
 
 
 if __name__ == '__main__':
 
     handler = MongoHandler()
-    auth = handler.authenticate('mateus@gmail.com', '123456qwerty')
-    # TESTE - REMOVER *APENAS* NA ENTREGA FINAL
-    # VERIFICA RAPIDAMENTE SE A CONEXAO COM O BANCO ESTA FUNCIONANDO
-    print(auth)
 
     # Funcao Menu Inicial
     def mostrar_menu():
@@ -60,11 +55,11 @@ if __name__ == '__main__':
             handler.adicionar_usuario(novo_usuario)
             print(f"\nUsuário {nickname} cadastrado com sucesso!")
             mostrar_menu()
-            escolher_opcao()  # Retorna ao menu principal após cadastro
+            escolher_opcao()
     
     # Funcao Logar no Sistema
     def login():
-        global nickname_logado #testando
+        global nickname_logado
         while True:
             print("\n----------------------------------------------------")
             print("                       LOGIN                        ")
@@ -109,14 +104,13 @@ if __name__ == '__main__':
 
         usersColl = handler.users_list()
 
-        # Remove o usuário logado da lista de usuários
+        # Remover usuário logado da lista de usuários
         usersColl = [user for user in usersColl if user != nickname_logado]
 
         if not usersColl:
             print("Nenhum usuário encontrado.")
             return
 
-        # Exibe a lista de usuários
         for index, user in enumerate(usersColl, start=1):
             print(f"{index}. {user}")
 
@@ -197,13 +191,10 @@ if __name__ == '__main__':
                 else:
                     print("Escolha inválida. Tente novamente.")
 
-
-    # DEU CERTO
     def getmessage(usuario_escolhido, nickname_logado):
         contents = handler.read_a_message(usuario_escolhido, nickname_logado)
         messages = [message['content'] for message in contents]
         return messages
-
 
     def escolher_mensagem_para_visualizar(usuario_escolhido, nickname_logado):
         messages = getmessage(usuario_escolhido, nickname_logado)
@@ -223,12 +214,10 @@ if __name__ == '__main__':
                     print(f"Escolha inválida. Digite um número entre 1 e {len(messages)}.")
             except ValueError:
                 print("Entrada inválida. Por favor, insira um número.")
-
-        # RETORNO DA FUNCAO
-        return messages[escolha - 1]  # -1 para ajustar ao índice da lista
+        return messages[escolha - 1]
 
 
-    # PARTE DA CRIPTOGRAFIA!!!!!!!!!!!!!!!!!!
+    # CRIPTOGRAFIA
     def encrypt(key, message):
         iv_parameter = "0011223344556677"
         output_format = "b64"
@@ -245,9 +234,5 @@ if __name__ == '__main__':
         descriptografia = (cipher.decrypt(message))
         return descriptografia
 
-
-
-    ## MAIN
-    # RODA O PROGRAMA INTEIRO!
     mostrar_menu()
     escolher_opcao()

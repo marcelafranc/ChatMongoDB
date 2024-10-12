@@ -21,23 +21,20 @@ class MongoHandler:
         else:
             return False
 
-    # ANOTACOES
-    # retorna o banco (db) para vc
-    # conect tarara db tal e faz a operacao
-    # precisa fazer disconnect
-
     # Funcao cadastrar Usuario
     def adicionar_usuario(self, u: User):
         db = self.connect("chat")
         coll = db.users
         return coll.insert_one(u.__dict__).inserted_id
     
+    # Funcao para validar se email já existe no banco
     def validarEmail(self, email: str) -> bool:
         db = self.connect("chat")
         coll = db.users
         usuario = coll.find_one({"email": email})
         return usuario is not None
     
+    # Funcao para validar se apelido já existe no banco
     def validarApelido(self, nickname: str) -> bool:
         db = self.connect("chat")
         coll = db.users
@@ -63,8 +60,8 @@ class MongoHandler:
 
         for user in users:
             nickname = user.get("nickname")
-            if nickname:  # Verifica se o nickname não é None
-                lista_nicknames.append(nickname)  # Adiciona o nickname à lista
+            if nickname:
+                lista_nicknames.append(nickname) 
 
         return lista_nicknames
 
@@ -79,26 +76,9 @@ class MongoHandler:
     def my_chats(self, nickname_logado):
         db = self.connect("chat")
         usuarios_distintos = db.messages.distinct("nickname_from", {"nickname_to": nickname_logado})
-        #msg = db.messages.find({"nickname_to": nickname_logado}, {"nickname_from": 1, "_id": 0})
-        #ret = [m['nickname_from'] for m in usuarios_distintos]
         return usuarios_distintos
 
-    # def get_users_who_sent_messages(self, logged_in_user_email):
-    #     db = self.connect("chat")
-    #     # Find distinct senders who sent messages to the logged-in user
-    #     distinct_senders = db.messages.distinct("remetente", {"destinatario": logged_in_user_email})
-    #
-    #     sender_messages = []
-    #     for sender in distinct_senders:
-    #         encrypted_messages = db.messages.find({"destinatario": logged_in_user_email, "remetente": sender})
-    #         for i, message in enumerate(encrypted_messages, start=1):
-    #             sender_messages.append({
-    #                 "indice": i,
-    #                 "remetente": sender,
-    #                 "mensagem": message['mensagem']  # Do not apply criptografia
-    #             })
-    #     return sender_messages
-
+    # Funcao para filtrar todas as mensagens de um usuario especifico (usuario logado)
     def read_a_message(self, usuario_escolhido, nickname_logado):
         db = self.connect("chat")
         mensagens_do_usuario = []
@@ -107,7 +87,7 @@ class MongoHandler:
             mensagens_do_usuario.append(message)
         return mensagens_do_usuario
 
-
+    # Funcao para agrupar todas as mensagens de um usuario especifico
     def getmanymsgs(self, usuario_escolhido, nickname_logado):
         db = self.connect("chat")
         messages = db.messages.find({"nickname_to": nickname_logado, "nickname_from": usuario_escolhido})
